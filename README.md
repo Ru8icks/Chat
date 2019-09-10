@@ -1,5 +1,5 @@
-run ng serve from chat
-run nodemon server from chat/api
+run ng serve from chat.
+run nodemon server from chat/api.
 run mongod
 
 # Chat
