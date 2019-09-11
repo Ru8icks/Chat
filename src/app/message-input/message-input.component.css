@@ -1,0 +1,21 @@
+:host {
+  display: grid;
+  padding: 5px;
+}
+
+.msginput {
+  grid-area: 1 /1 / span 1/ span 3;
+  border-radius: 15px 15px 15px 15px;
+  padding-right: 3px;
+
+
+
+}
+.send {
+  grid-area: 1 / 4 / span 1/ span 1;
+  border-radius: 15px 15px 15px 15px;
+  padding-left: 3px;
+
+
+
+}

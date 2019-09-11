@@ -1,0 +1,25 @@
+
+<main class="chatform">
+  <form [formGroup]="chatForm" novalidate *ngIf="!nickname" >
+    <div class="form-group">
+      <label class="col-md-4">Nickname</label>
+      <input type="text" class="form-control" formControlName="nickname" #nickname placeholder="username"/>
+    </div>
+    <div *ngIf="chatForm.controls['nickname'].invalid && (chatForm.controls['nickname'].dirty || chatForm.controls['nickname'].touched)" class="alert alert-danger">
+      <div *ngIf="chatForm.controls['nickname'].errors.required">
+        Nickname is required.
+      </div>
+
+    </div>
+    <div class="form-group">
+      <button (click)="enterChat(nickname.value)"
+              [disabled]="chatForm.pristine || chatForm.invalid"
+              class="btn btn-primary btn-block" >
+        Enter Chat
+      </button>
+    </div>
+    <div *ngIf="nicknameTaken">
+      Nickname is already in use.
+    </div>
+  </form>
+</main>

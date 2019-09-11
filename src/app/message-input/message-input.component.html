@@ -1,0 +1,15 @@
+
+  <div   class="msginput">
+
+    <input class="form-control"  [(ngModel)]="message" (keyup)="sendTyping(event)" (keyup.enter)="sendMessage(chat.value)" #chat/>
+
+
+  </div>
+  <div class="send" >
+
+
+    <button (click)="sendMessage(message)"
+            class="btn btn-outline-light btn-block">
+      Send
+    </button>
+  </div>

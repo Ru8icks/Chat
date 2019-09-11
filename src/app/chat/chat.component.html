@@ -1,0 +1,54 @@
+
+<app-login *ngIf="!user">
+
+</app-login>
+
+<div class="header" *ngIf="user">
+
+  <h1 >Welcome {{user.nickname}}</h1>
+</div>
+
+<div class="newMessages" *ngIf="user">
+  <h3>Recent Chats</h3>
+  <div   *ngFor="let msg of newMessages" class="padding"  [ngClass]="msg.count > 0 ? 'shaker' : ''" >
+    <button class="btn btn-dark btn-block overflow-hidden "  (click)="selectChat(msg.message.sender); reduceCount(msg); setActiveChat(msg.message.nickname)">
+      {{msg.message.nickname}}   <span *ngIf="msg.count > 0">+{{msg.count}}</span>
+    </button>
+  </div>
+</div>
+
+<div class="nicks" *ngIf="user">
+  <h3>active users</h3>
+  <div class="">
+
+    <button class="btn btn-dark btn-block " (click)="selectChat('Public'); setActiveChat('Public')">
+      Public
+    </button>
+  </div>
+
+  <div   *ngFor="let nick of nicks | async" class="padding" >
+    <button *ngIf="nick.nickname !== this.user.nickname" class="btn btn-dark btn-block overflow-hidden" (click)="selectChat(nick.socketID); setActiveChat(nick.nickname) ">
+      {{nick.nickname}}
+    </button>
+  </div>
+</div>
+
+<div *ngIf="user" class="chat" #chat [scrollTop]="chat.scrollHeight">
+  <div class="activeChat">
+    <p>{{activeChat}}</p>
+  </div>
+  <div class="messages">
+    <div *ngFor="let message of selectedMessages" class="message" [ngClass]="message.nickname === user.nickname ? 'myMessage' : 'message'" >
+      <p><span class="bold" >{{message.nickname}} says: </span>{{message.message}} </p>
+    </div>
+  </div>
+
+  <div class="message"   *ngIf="typing.sender === selectedChat && typing.isTyping">
+    <app-spinner ></app-spinner>
+  </div>
+
+</div>
+
+<app-message-input *ngIf="user">
+
+</app-message-input>

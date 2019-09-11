@@ -1,0 +1,18 @@
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <td>nickname</td>
+    <td>socketID</td>
+    <td>actions</td>
+  </tr>
+  </thead>
+
+  <tbody>
+  <tr *ngFor="let user of users ">
+    <td>{{ user.nickname}}</td>
+    <td>{{ user.socketID}}</td>
+
+    <td><a (click) = "delete(user._id)" class="btn btn-danger">Delete</a></td>
+  </tr>
+  </tbody>
+</table>
