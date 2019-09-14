@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ChatService} from '../services/chat.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {DataService} from '../services/data.service';
 
 @Component({
   selector: 'app-login',
@@ -12,11 +13,12 @@ export class LoginComponent implements OnInit {
   private nicknameTaken: boolean;
 
   constructor(private fb: FormBuilder,
-              private cs: ChatService) { }
+              private cs: ChatService,
+              private ds: DataService) { }
 
   ngOnInit() {
     this.createForm();
-    this.cs.nicknametaken$
+    this.ds.nicknametaken$
       .subscribe((value) => {
         this.nicknameTaken = value;
       });
