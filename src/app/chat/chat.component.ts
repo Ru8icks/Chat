@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import 'rxjs/add/operator/filter';
 import User from '../models/user';
 import Typing from '../models/typing';
+import {DataService} from '../services/data.service';
 
 
 @Component({
@@ -24,7 +25,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   private typing = new Typing();
 
   constructor(private fb: FormBuilder,
-              private cs: ChatService) {
+              private cs: ChatService,
+              private ds: DataService) {
   }
 
   ngOnInit() {
@@ -34,19 +36,19 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.getPublicMessages();
     this.getPrivateMessages();
 
-    this.cs.selectedChat$
+    this.ds.selectedChat$
       .subscribe((value) => {
         this.selectedChat = value;
       });
-    this.cs.user$
+    this.ds.user$
       .subscribe((value) => {
         this.user = value;
       });
-    this.cs.selectedMessages$
+    this.ds.selectedMessages$
       .subscribe((value) => {
         this.selectedMessages = value;
       });
-    this.cs.messages$
+    this.ds.messages$
       .subscribe((value) => {
         this.messages = value;
       });
@@ -61,14 +63,14 @@ export class ChatComponent implements OnInit, OnDestroy {
         console.log('fire fire setuser')
         if (nick !== null) {
           console.log(nick, nick[0].nickname)
-          this.cs.changeNicknameTaken(false);
+          this.ds.setNicknameTaken(false);
           const user: User = {
             nickname: nick[0].nickname,
             myID: nick[0].socketID,
           };
-          this.cs.setUser(user);
+          this.ds.setUser(user);
         } else {
-          this.cs.changeNicknameTaken(true);
+          this.ds.setNicknameTaken(true);
         }
       });
   }
@@ -84,7 +86,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.messages.push(message);
         if (this.selectedChat === 'Public') {
           this.selectedMessages.push(message);
-          this.cs.setSelectedMessages(this.selectedMessages);
+          this.ds.setSelectedMessages(this.selectedMessages);
         }
       });
   }
@@ -92,14 +94,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.cs.getPrivateMessages()
       .subscribe((message) => {
         this.messages.push(message);
-        this.cs.setMessages(this.messages);
+        this.ds.setMessages(this.messages);
         const newMessage = {
           message: message,
           count: 1,
         };
         if (this.isMyMessage(message)) {
           this.selectedMessages.push(message);
-          this.cs.setSelectedMessages(this.selectedMessages);
+          this.ds.setSelectedMessages(this.selectedMessages);
           if (this.newMessages.filter(msg => msg.message.sender === newMessage.message.sender).length === 0) {
             this.newMessages.push(newMessage);
           }
@@ -127,8 +129,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   selectChat(user) {
     console.log('select chat ', user)
-    this.cs.setSelectedChat(user);
-    this.cs.setSelectedMessages( this.messages.filter((msg) => this.isMyMessage(msg)));
+    this.ds.setSelectedChat(user);
+    this.ds.setSelectedMessages( this.messages.filter((msg) => this.isMyMessage(msg)));
   }
 
   private isMyMessage(msg) {

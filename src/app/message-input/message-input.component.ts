@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ChatService} from '../services/chat.service';
 import User from '../models/user';
+import {DataService} from '../services/data.service';
 
 @Component({
   selector: 'app-message-input',
@@ -17,24 +18,25 @@ export class MessageInputComponent implements OnInit {
   private isTyping =  false;
   private typingInterval;
 
-  constructor(private cs: ChatService) { }
+  constructor(private cs: ChatService,
+              private ds: DataService) { }
 
 
   ngOnInit() {
     console.log('inininint messageinput')
-    this.cs.selectedChat$
+    this.ds.selectedChat$
       .subscribe((value) => {
         this.selectedChat = value;
       });
-    this.cs.user$
+    this.ds.user$
       .subscribe((value) => {
         this.user = value;
       });
-    this.cs.selectedMessages$
+    this.ds.selectedMessages$
       .subscribe((value) => {
         this.selectedMessages = value;
       });
-    this.cs.messages$
+    this.ds.messages$
       .subscribe((value) => {
         this.messages = value;
       });
@@ -53,10 +55,10 @@ export class MessageInputComponent implements OnInit {
     } else {
       this.cs.sendPrivateMessage(obj);
       this.messages.push(obj);
-      this.cs.setMessages(this.messages)
+      this.ds.setMessages(this.messages)
       if (this.isMyMessage(obj)) {
         this.selectedMessages.push(obj);
-        this.cs.selectedMessages$.next(this.selectedMessages);
+        this.ds.selectedMessages$.next(this.selectedMessages);
       }
     }
 
@@ -74,7 +76,7 @@ export class MessageInputComponent implements OnInit {
     if (!this.isTyping) {
       console.log(this.isTyping);
       this.isTyping =  true;
-      this.cs.sendTyping(true);
+      this.cs.sendTyping(true, this.selectedChat, this.user.myID);
       this.startCheckingTyping();
     }
   }
@@ -94,7 +96,7 @@ export class MessageInputComponent implements OnInit {
     console.log('stopcheking is go ');
     if (this.typingInterval) {
       clearInterval(this.typingInterval);
-      this.cs.sendTyping(false);
+      this.cs.sendTyping(false, this.selectedChat, this.user.myID);
     }
   }
 }

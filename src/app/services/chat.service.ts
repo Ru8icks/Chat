@@ -15,49 +15,12 @@ export class ChatService {
   uri = 'http://localhost:4000/business';
   private socket = io('http://localhost:4000');
   private _refresh$ = new Subject<any>();
+
+
+
+  constructor(private http: HttpClient) {  }
   get refresh$() {
     return this._refresh$;
-  }
-
-  _nicknameTaken$ = new BehaviorSubject<boolean>(false);
-  get nicknametaken$() {
-    return this._nicknameTaken$;
-  }
-  _selectedChat$ = new BehaviorSubject<string>('Public');
-  get selectedChat$() {
-    return this._selectedChat$;
-  }
-  _user$ = new BehaviorSubject<User>(undefined);
-  get user$() {
-    return this._user$;
-  }
-  _messages$ = new BehaviorSubject<any[]>([]);
-  get messages$() {
-    return this._messages$;
-  }
-  _selectedMessages$ = new BehaviorSubject<any[]>([]);
-  get selectedMessages$() {
-    return this._selectedMessages$;
-  }
-  constructor(private http: HttpClient) {  }
-
-  setSelectedMessages(msgs) {
-    this._selectedMessages$.next(msgs);
-  }
-  setMessages(msgs) {
-    this._messages$.next(msgs);
-  }
-  setUser(user: User) {
-    this._user$.next(user);
-  }
-  setSelectedChat(value: string) {
-    this._selectedChat$.next(value);
-  }
-
-
-  changeNicknameTaken(value: boolean) {
-    console.log('change nickkname taken');
-    this._nicknameTaken$.next(value);
   }
 
   addMember(nickname) {
@@ -129,12 +92,12 @@ export class ChatService {
       });
   }
 
-  sendTyping(bol: boolean) {
+  sendTyping(bol: boolean, selectedChat: string, sender: string) {
     console.log('are we here yet sendtype')
     const typing: Typing = {
       isTyping: bol,
-      receiver: this.selectedChat$.getValue(),
-      sender: this.user$.getValue().myID,
+      receiver: selectedChat,
+      sender: sender,
     };
     console.log('are we here yet sendtype', typing)
     this.socket.emit('is-typing', (  typing));
