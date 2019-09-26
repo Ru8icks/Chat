@@ -1,6 +1,6 @@
-run ng serve from chat.
-run nodemon server from chat/api.
-run mongod
+Se it at:
+https://powerful-dawn-49923.herokuapp.com/
+
 
 # Chat
 
